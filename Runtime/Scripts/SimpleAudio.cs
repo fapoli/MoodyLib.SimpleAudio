@@ -8,11 +8,21 @@ namespace MoodyLib.SimpleAudio {
         private static SimpleAudio _instance;
 
         public int initialAudioSourceCount = 10;
+        [Range(0f, 1f)] public float volumeScale = 1f;
+
+        public static bool isMuted => _instance != null && _instance._isMuted;
 
         private AudioSource _mainAudioSource;
         private List<AudioSource> _audioSourcePool;
-        
+        private bool _isMuted;
+
         private void Awake() {
+            var existingInstances = FindObjectsByType<SimpleAudio>();
+            if (existingInstances.Length > 1) {
+                Destroy(gameObject);
+                return;
+            }
+
             _mainAudioSource = GetComponent<AudioSource>();
             _audioSourcePool = new List<AudioSource>();
             transform.position = Vector3.zero;
@@ -20,8 +30,9 @@ namespace MoodyLib.SimpleAudio {
             for (var i = 0; i < initialAudioSourceCount; i++) {
                 CreateAudioSource();
             }
-            
+
             _instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         
         /// <summary>
@@ -88,10 +99,21 @@ namespace MoodyLib.SimpleAudio {
             PlayAtPoint(audioClips[Random.Range(0, audioClips.Count)], position, volume, spatialBlend);
         }
         
-        private void PlaySound(AudioClip audioClip, float volume = 1) {
-            _mainAudioSource.PlayOneShot(audioClip, volume);
+        /// <summary>
+        /// Mutes or unmutes all sounds played through SimpleAudio. Takes effect immediately, no fade.
+        /// </summary>
+        public static void SetMuted(bool muted) {
+            if (_instance) _instance._isMuted = muted;
         }
-        
+
+        public static void ToggleMute() {
+            if (_instance) _instance._isMuted = !_instance._isMuted;
+        }
+
+        private void PlaySound(AudioClip audioClip, float volume = 1) {
+            _mainAudioSource.PlayOneShot(audioClip, EffectiveVolume(volume));
+        }
+
         private void PlayAt(AudioClip audioClip, Vector3 position, float volume = 1, float spatialBlend = 1) {
             if (spatialBlend <= 0) {
                 PlaySound(audioClip, volume);
@@ -99,13 +121,17 @@ namespace MoodyLib.SimpleAudio {
             }
 
             if (spatialBlend > 1) spatialBlend = 1;
-            
+
             var audioSource = GetUnusedAudioSource();
             audioSource.transform.position = position;
             audioSource.spatialBlend = spatialBlend;
-            audioSource.volume = volume;
+            audioSource.volume = EffectiveVolume(volume);
             audioSource.clip = audioClip;
             audioSource.Play();
+        }
+
+        private float EffectiveVolume(float volume) {
+            return _isMuted ? 0f : volume * volumeScale;
         }
 
         private AudioSource GetUnusedAudioSource() {
