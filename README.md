@@ -1,4 +1,4 @@
-# SimpleAudio
+# MoodyLib.SimpleAudio
 
 A pooled audio manager that can be accessed with a singleton, to avoid having to place AudioSources in every GameObject. It supports playing sounds by using the components AudioManager, but also allows 3D spatial sound by instantiating AudioManagers with spatial blend in different positions. The spatial audiomanagers are saved in an object pool, so they can be reused to avoid having to instantiate the objects every time. It persists across scene loads, so a sound triggered right before a scene transition still finishes playing.
 
@@ -17,7 +17,7 @@ A pooled audio manager that can be accessed with a singleton, to avoid having to
 3. Select **“Add package from Git URL…”**.
 4. Paste this URL and click **Add**:
    ```text
-   https://github.com/fapoli/SimpleAudio.git
+   https://github.com/fapoli/MoodyLib.SimpleAudio.git
    ```
 
 Unity will download and add the package to your project. After installation, the package will appear under the Packages folder.
