@@ -1,5 +1,8 @@
 # MoodyLib.SimpleAudio
 
+[![Unity](https://img.shields.io/badge/Unity-000000?logo=unity&logoColor=white)](https://unity.com)
+[![License: MIT](https://img.shields.io/github/license/fapoli/MoodyLib.SimpleAudio)](LICENSE)
+
 A pooled audio manager that can be accessed with a singleton, to avoid having to place AudioSources in every GameObject. It supports playing sounds by using the components AudioManager, but also allows 3D spatial sound by instantiating AudioManagers with spatial blend in different positions. The spatial audiomanagers are saved in an object pool, so they can be reused to avoid having to instantiate the objects every time. It persists across scene loads, so a sound triggered right before a scene transition still finishes playing.
 
 `SimpleAudio` is for short one-shot sounds (clicks, hits, etc.) that don't need their own dedicated AudioSource per GameObject. Looping, crossfading background music is a different beast, handled separately by `BGMPlaylist`.

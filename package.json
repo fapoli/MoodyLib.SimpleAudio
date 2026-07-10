@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "displayName": "Simple Audio",
   "description": "Lightweight audio system with pooled AudioSources.",
+  "license": "MIT",
   "author": {
     "name": "Federico Polí",
     "url": "https://github.com/fapoli"
